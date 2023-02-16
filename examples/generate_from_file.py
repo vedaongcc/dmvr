@@ -163,11 +163,14 @@ def generate_sequence_example(
 def main(argv):
     del argv
     # reads the input csv.
-    input_csv = pd.read_csv(FLAGS.csv_path)
+    input = pd.read_csv(FLAGS.csv_path)
+    input_csv = input[input["video_path"].apply(os.path.exists)]
+
     if FLAGS.num_shards == -1:
         num_shards = int(math.sqrt(len(input_csv)))
     else:
         num_shards = FLAGS.num_shards
+
     # Set up the TFRecordWriters.
     basename = os.path.splitext(os.path.basename(FLAGS.csv_path))[0]
     shard_names = [
@@ -196,7 +199,6 @@ def main(argv):
             e = input_csv["end"].values[i]
             l = input_csv["label"].values[i] if "label" in input_csv else None
             c = input_csv["caption"].values[i] if "caption" in input_csv else None
-            print(v, s, e, l, c, l_map)
             seq_ex = generate_sequence_example(
                 v, s, e, label_name=l, caption=c, label_map=l_map
             )
