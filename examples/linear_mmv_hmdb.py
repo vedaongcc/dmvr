@@ -15,6 +15,10 @@
 """HMDB51 linear evaluation of MMV models."""
 
 from absl import app
+import sys
+
+sys.path.insert(1, '/home/vlso/Documents/GitHub/DMVR/dmvr/')
+
 from absl import flags
 from dmvr import builders
 import hmdb
